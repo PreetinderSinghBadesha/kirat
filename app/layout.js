@@ -21,7 +21,7 @@ export default function RootLayout({ children }) {
         className={`${kanit.variable} antialiased bg-[#f6f6f6] flex flex-col sm:flex-row h-screen w-screen overflow-x-hidden`}
       >
         <Sidebar />
-        <main className="w-full sm:w-[70%] h-full">
+        <main className="w-full sm:w-[80%] h-full">
           {children}
         </main>
       </body>

@@ -4,7 +4,7 @@ import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 export async function GET(request, { params }) {
     try {
         const client = await clientPromise;
-        const db = client.db('kirat');
+        const db = client.db('Kirat');
         const { getUser } = getKindeServerSession();
         const user = await getUser();
         const tasks = await db.collection('tasks').find({ userId: user?.id }).toArray();

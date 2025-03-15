@@ -6,11 +6,13 @@ import { useRouter } from 'next/navigation';
 export default function AddTaskPage() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [dueDate, setDueDate] = useState('');
+  const [microTasks, setMicroTasks] = useState([{ title: '', description: '' }]);
   const router = useRouter();
 
   const handleAddTask = async (e) => {
     e.preventDefault();
-    const newTask = { title, description };
+    const newTask = { title, description, dueDate, microTask: microTasks };
 
     try {
       const response = await fetch('/api/tasks', {
@@ -29,6 +31,16 @@ export default function AddTaskPage() {
     } catch (error) {
       console.error('Error adding task:', error);
     }
+  };
+
+  const handleMicroTaskChange = (index, field, value) => {
+    const newMicroTasks = [...microTasks];
+    newMicroTasks[index][field] = value;
+    setMicroTasks(newMicroTasks);
+  };
+
+  const handleAddMicroTask = () => {
+    setMicroTasks([...microTasks, { title: '', description: '' }]);
   };
 
   return (
@@ -50,6 +62,34 @@ export default function AddTaskPage() {
           onChange={(e) => setDescription(e.target.value)}
           className="border p-2 mb-4 w-full"
         />
+        <input
+          type="date"
+          placeholder="Due Date"
+          value={dueDate}
+          onChange={(e) => setDueDate(e.target.value)}
+          className="border p-2 mb-4 w-full"
+        />
+        <h2 className="text-xl font-bold mb-2">Micro Tasks</h2>
+        {microTasks.map((microTask, index) => (
+          <div key={index} className="mb-4">
+            <input
+              type="text"
+              placeholder="Micro Task Title"
+              value={microTask.title}
+              onChange={(e) => handleMicroTaskChange(index, 'title', e.target.value)}
+              className="border p-2 mb-2 w-full"
+              required
+            />
+            <input
+              type="text"
+              placeholder="Micro Task Description"
+              value={microTask.description}
+              onChange={(e) => handleMicroTaskChange(index, 'description', e.target.value)}
+              className="border p-2 mb-2 w-full"
+            />
+          </div>
+        ))}
+        <button type="button" onClick={handleAddMicroTask} className="bg-green-500 text-white p-2 w-full mb-4">Add Micro Task</button>
         <button type="submit" className="bg-blue-500 text-white p-2 w-full">Add Task</button>
       </form>
     </div>
