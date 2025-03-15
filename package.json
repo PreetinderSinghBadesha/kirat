@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "pages:build": "next build && next-on-pages --dir .next"
+    "pages:build": "next build && next-on-pages --outdir .vercel/output"
   },
   "dependencies": {
     "@kinde-oss/kinde-auth-nextjs": "^2.5.3",
