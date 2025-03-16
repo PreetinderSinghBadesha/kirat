@@ -2,17 +2,11 @@
   "name": "kirat",
   "version": "0.1.0",
   "private": true,
-  "engines": {
-    "node": ">=18.18.0"
-  },
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "pages:build": "npx @cloudflare/next-on-pages",
-    "preview": "npm run pages:build && wrangler pages dev",
-    "deploy": "npm run pages:build && wrangler pages deploy"
+    "lint": "next lint"
   },
   "dependencies": {
     "@kinde-oss/kinde-auth-nextjs": "^2.5.3",
