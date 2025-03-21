@@ -4,20 +4,12 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import TaskCard from "./components/task_card";
 
-function Modal({ show, onClose, children }) {
+function Modal({ show, children }) {
   if (!show) return null;
 
   return (
     <div className="fixed inset-0 flex justify-center items-center z-50 p-4 sm:p-0">
-      <div className="bg-white p-5 rounded relative shadow-lg w-full max-w-md sm:max-w-lg max-h-[80vh] overflow-y-auto">
-        <button
-          onClick={onClose}
-          className="absolute top-2 right-2 bg-red-500 text-white px-3 py-1 rounded-full"
-        >
-          X
-        </button>
-        {children}
-      </div>
+      {children}
     </div>
   );
 }
@@ -107,11 +99,40 @@ export default function DashBoard() {
         </div>
       </div>
       <Modal show={showModal} onClose={handleModalClose}>
+        <style jsx>{`
+          ::-webkit-scrollbar {
+            width: 10px;
+          }
+          ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+          }
+          ::-webkit-scrollbar-thumb {
+            background: #fff;
+            border-radius: 10px;
+            border: 2px solid black;
+            box-shadow: 2px 4px 0 0 rgba(0, 0, 0, 1);
+          }
+          ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+          }
+          input {
+            border: 2px solid black;
+            box-shadow: 2px 4px 0 0 rgba(0, 0, 0, 1);
+          }
+        `}</style>
         <form
           onSubmit={handleAddTask}
-          className="bg-white p-6 rounded w-full"
+          className="bg-[#f6f6f6] p-6 rounded w-full shadow-[0_10px_30px_rgba(0,0,0,0.7)] max-w-md sm:max-w-lg max-h-[90vh] overflow-y-auto"
         >
-          <h1 className="text-2xl font-bold mb-4">Add New Task</h1>
+          <div className="flex justify-between items-center mb-4">
+            <h1 className="text-2xl font-bold">Add New Task</h1>
+            <button
+              onClick={handleModalClose}
+              className="bg-red-500 text-white px-3 py-1 rounded-full"
+            >
+              X
+            </button>
+          </div>
           <div className="mb-4">
             <label className="block text-gray-700 mb-2">Title</label>
             <input
@@ -119,7 +140,7 @@ export default function DashBoard() {
               placeholder="Title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="border p-2 w-full rounded"
+              className="border p-2 w-full rounded bg-white"
               required
             />
           </div>
@@ -130,7 +151,7 @@ export default function DashBoard() {
               placeholder="Description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="border p-2 w-full rounded"
+              className="border p-2 w-full rounded bg-white"
             />
           </div>
           <div className="mb-4">
@@ -139,7 +160,7 @@ export default function DashBoard() {
               type="date"
               value={dueDate}
               onChange={(e) => setDueDate(e.target.value)}
-              className="border p-2 w-full rounded"
+              className="border p-2 w-full rounded bg-white"
             />
           </div>
           <h2 className="text-xl font-bold mb-2">Micro Tasks</h2>
@@ -150,7 +171,7 @@ export default function DashBoard() {
                 <button
                   type="button"
                   onClick={() => handleDeleteMicroTask(index)}
-                  className="text-red-500"
+                  className="text-red-500 hover:text-red-700"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -181,10 +202,10 @@ export default function DashBoard() {
                 onChange={(e) =>
                   handleMicroTaskChange(index, "title", e.target.value)
                 }
-                className="border p-2 w-full rounded"
+                className="border p-2 w-full rounded bg-white"
                 required
               />
-              <div>
+              <div className="mt-4">
                 <label className="block text-gray-700 mb-2">
                   Micro Task Description
                 </label>
@@ -195,7 +216,7 @@ export default function DashBoard() {
                   onChange={(e) =>
                     handleMicroTaskChange(index, "description", e.target.value)
                   }
-                  className="border p-2 w-full rounded"
+                  className="border p-2 w-full rounded bg-white"
                 />
               </div>
             </div>
