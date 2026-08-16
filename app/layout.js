@@ -1,6 +1,7 @@
 import { Kanit } from "next/font/google";
 import "./globals.css";
 import Sidebar from "./dashboard/components/side_bar";
+import { TasksProvider } from "./dashboard/tasks_context";
 
 const kanit = Kanit({
   subsets: ["latin"],
@@ -18,12 +19,14 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`${kanit.variable} antialiased bg-[#f6f6f6] flex flex-col sm:flex-row h-screen w-screen overflow-x-hidden`}
+        className={`${kanit.variable} antialiased bg-[#f6f6f6] flex flex-col sm:flex-row min-h-screen w-full overflow-x-hidden`}
       >
-        <Sidebar />
-        <main className="w-full sm:w-[80%] h-full">
-          {children}
-        </main>
+        <TasksProvider>
+          <Sidebar />
+          <main className="w-full min-w-0 flex-1">
+            {children}
+          </main>
+        </TasksProvider>
       </body>
     </html>
   );

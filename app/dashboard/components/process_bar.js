@@ -3,10 +3,12 @@
 import React from 'react'
 
 const CircularProgressBar = ({
-  strokeWidth = 8,
-  sqSize = 160,
+  strokeWidth = 5,
+  sqSize = 56,
   percentage,
-  color = '#7c3aed',
+  color = '#5594f1',
+  trackColor = '#e5e5e5',
+  textColor = '#222222',
 }) => {
   const radius = (sqSize - strokeWidth) / 2
   const viewBox = `0 0 ${sqSize} ${sqSize}`
@@ -14,13 +16,14 @@ const CircularProgressBar = ({
   const dashOffset = dashArray - (dashArray * percentage) / 100
 
   return (
-    <svg width={sqSize} height={sqSize} viewBox={viewBox}>
+    <svg width={sqSize} height={sqSize} viewBox={viewBox} className="flex-shrink-0">
       <circle
-        className="fill-none stroke-gray-200"
+        className="fill-none"
         cx={sqSize / 2}
         cy={sqSize / 2}
         r={radius}
         strokeWidth={strokeWidth}
+        stroke={trackColor}
       />
 
       <circle
@@ -43,10 +46,11 @@ const CircularProgressBar = ({
         y="50%"
         dy=".3em"
         textAnchor="middle"
-        fill="#172554"
-        className="text-l font-semibold"
+        fill={textColor}
+        fontSize="13"
+        fontWeight="600"
       >
-        {percentage}%
+        {Math.round(percentage)}%
       </text>
     </svg>
   )

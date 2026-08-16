@@ -1,10 +1,9 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
-import { useRouter } from 'next/navigation';
-import Image from 'next/image';
+import { useParams, useRouter } from 'next/navigation';
 import MicroTaskCard from './components/micro_task';
+import { STATUS_META, formatDate } from '../../tasks_context';
 
 const TaskPage = () => {
     const { id } = useParams();
@@ -26,7 +25,6 @@ const TaskPage = () => {
         })
         .then(response => {
             if (response.ok) {
-                console.log('Task deleted successfully');
                 router.push('/dashboard');
             } else {
                 console.error('Error deleting task');
@@ -37,53 +35,56 @@ const TaskPage = () => {
 
     if (!task) {
         return (
-            <div className='bg-[#f6f6f6] h-screen w-full flex overflow-x-hidden justify-center items-center'>
+            <div className='min-h-screen w-full flex justify-center items-center'>
                 loading...
             </div>
         );
     }
 
+    const meta = STATUS_META[task.status] || STATUS_META['in-progress'];
+
     return (
-        <div className='bg-[#f6f6f6] h-screen w-full flex flex-col overflow-x-hidden p-5'>
-            <style jsx>{`
-                ::-webkit-scrollbar {
-                    width: 10px;
-                }
-                ::-webkit-scrollbar-track {
-                    background: #f1f1f1;
-                }
-                ::-webkit-scrollbar-thumb {
-                    background: #fff;
-                    border-radius: 10px;
-                    border: 2px solid black;
-                    box-shadow: 2px 4px 0 0 rgba(0, 0, 0, 1);
-                }
-                ::-webkit-scrollbar-thumb:hover {
-                    background: #555;
-                }
-            `}</style>
-            <div className='flex flex-row justify-between items-center'>
-                <p className='text-4xl font-bold mb-5 truncate'>{task.title}</p>
-                <div onClick={handleDelete} className='bg-red-500 text-white h-10 px-4 flex justify-center items-center rounded-full hover:bg-red-700 transition duration-300 border-black border-2 shadow-[2px_4px_0_0_rgba(0,0,0,1)]'>
-                    delete
-                </div>
-            </div>
-            <p className='text-2xl font-medium mb-3'>Objective</p>
-            <p className='text-1xl text-[#909090] break-words'>{task.description}</p>
-            <div className='flex w-fit my-5 px-3 py-1 justify-center items-center rounded-full hover:bg-[#e9e9eac7] transition duration-300 border-black border-2 shadow-[2px_4px_0_0_rgba(0,0,0,1)]'>
-                <Image src='/alarm.png' alt='clock' width={20} height={20} />
-                <p className='text-1xl font-medium ml-2 mr-1'>Deadline:</p>
-                <p className='text-1xl'>{new Date(task.dueDate).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</p>
-            </div>
-            <div className='flex flex-col justify-between'>
-                {/* <p className='text-2xl font-medium mb-3'>Micro Tasks</p> */}
-                <div className='flex flex-wrap gap-5'>
-                    {task.microTask.map((microTask, index) => (
-                        <MicroTaskCard key={index} task={microTask} parentId={task._id} index={index} />
-                    ))}
-                </div>
+        <div className='min-h-screen w-full p-6 sm:p-8'>
+            <div
+                onClick={() => router.push('/dashboard')}
+                className='inline-flex items-center gap-1.5 mb-5 cursor-pointer text-sm font-semibold text-[#5594f1]'
+            >
+                ← Back to tasks
             </div>
 
+            <div className='flex justify-between items-start gap-4 mb-1.5'>
+                <p className='text-[32px] font-bold m-0 break-words'>{task.title}</p>
+                <button
+                    onClick={handleDelete}
+                    className='bg-[#f26e56] text-white h-10 px-[18px] flex items-center justify-center rounded-full border-2 border-black shadow-[2px_4px_0_0_rgba(0,0,0,1)] cursor-pointer font-semibold text-sm whitespace-nowrap'
+                >
+                    Delete
+                </button>
+            </div>
+
+            <span
+                className="inline-block text-[11px] font-bold px-2.5 py-1 rounded-full mb-5"
+                style={{ color: meta.color, background: `${meta.color}22` }}
+            >
+                {meta.label}
+            </span>
+
+            <p className='text-xl font-semibold mb-2'>Objective</p>
+            <p className='text-[15px] leading-relaxed text-[#666666] max-w-[640px] mb-5 break-words'>
+                {task.description}
+            </p>
+
+            <div className='inline-flex items-center gap-2 border-2 border-black rounded-full px-4 py-2 shadow-[2px_4px_0_0_rgba(0,0,0,1)] mb-7 text-sm'>
+                <span className='font-semibold'>Deadline:</span>
+                <span>{formatDate(task.dueDate)}</span>
+            </div>
+
+            <p className='text-xl font-bold mb-3'>Microtasks</p>
+            <div className='flex flex-col'>
+                {task.microTask.map((microTask, index) => (
+                    <MicroTaskCard key={index} task={microTask} parentId={task._id} index={index} />
+                ))}
+            </div>
         </div>
     );
 };

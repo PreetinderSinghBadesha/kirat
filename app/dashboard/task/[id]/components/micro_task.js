@@ -6,7 +6,7 @@ export default function MicroTaskCard({ task, parentId, index }) {
     const handleToggleCompleted = async () => {
         const updatedTask = { completed: !completed, taskId: parentId };
         try {
-            const response = await fetch(`/api/tasks/microtask/${index}`, { 
+            const response = await fetch(`/api/tasks/microtask/${index}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -14,7 +14,6 @@ export default function MicroTaskCard({ task, parentId, index }) {
                 body: JSON.stringify(updatedTask),
             });
             if (response.ok) {
-                console.log(`Micro Task ${index} updated successfully`);
                 setCompleted(!completed);
             } else {
                 console.error(`Failed to update micro task ${index}`);
@@ -25,20 +24,28 @@ export default function MicroTaskCard({ task, parentId, index }) {
     };
 
     return (
-        <div onClick={handleToggleCompleted} className="cursor-pointer bg-[#ffffff] hover:bg-[#e9e9eac7] sm:max-h-full w-full max-w-full sm:w-[30%] p-5 border-2 flex flex-row justify-between border-black rounded-2xl shadow-[2px_4px_0_0_rgba(0,0,0,1)]">
-            <div className="flex flex-col overflow-hidden">
-                <span className="font-bold text-xl truncate">{task.title}</span>
-                <span className="font-light mt-3 break-words overflow-hidden text-ellipsis line-clamp-2">{task.description}</span>
+        <div
+            onClick={handleToggleCompleted}
+            className="flex items-center gap-3 px-4 py-3.5 bg-white border-2 border-black rounded-2xl shadow-[2px_3px_0_0_rgba(0,0,0,1)] mb-2.5 max-w-[640px] cursor-pointer"
+        >
+            <div
+                className="w-[22px] h-[22px] rounded-full border-2 border-black flex items-center justify-center flex-shrink-0 text-white text-xs font-bold"
+                style={{ background: completed ? '#000000' : '#ffffff' }}
+            >
+                {completed && <span>✓</span>}
             </div>
-            <div className="flex flex-col items-center justify-center">
-                {completed ? (
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white bg-[#52c1c5] rounded-md border-1 border-black shadow-[1px_2px_0_0_rgba(0,0,0,1)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                ) : (
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white  rounded-md border-1 border-black shadow-[1px_2px_0_0_rgba(0,0,0,1)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        {/* <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /> */}
-                    </svg>
+            <div>
+                <p
+                    className="m-0 font-semibold text-[15px]"
+                    style={{
+                        textDecoration: completed ? 'line-through' : 'none',
+                        color: completed ? '#999999' : '#000000',
+                    }}
+                >
+                    {task.title}
+                </p>
+                {task.description && (
+                    <p className="mt-0.5 text-[13px] text-[#999999]">{task.description}</p>
                 )}
             </div>
         </div>

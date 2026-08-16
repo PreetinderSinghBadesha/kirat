@@ -1,8 +1,8 @@
 "use client"
 
 import CircularProgressBar from "./process_bar";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { STATUS_META, formatDate } from "../tasks_context";
 
 export default function TaskCard({ task }) {
     const router = useRouter();
@@ -11,39 +11,35 @@ export default function TaskCard({ task }) {
         router.push(`/dashboard/task/${task._id}`);
     };
 
-    const getProgressBarColor = (status) => {
-        switch (status) {
-            case 'on-going':
-                return '#5594f1';
-            case 'completed':
-                return '#52c1c5'; 
-            case 'urgent':
-                return '#f26e56'; 
-            default:
-                return '#ffc446'; 
-        }
-    };
-
-    const completedMicroTasks = task.microTask.filter(microTask => microTask.completed).length;
-    const totalMicroTasks = task.microTask.length;
+    const meta = STATUS_META[task.status] || STATUS_META["in-progress"];
+    const completedMicroTasks = task.microTask?.filter((m) => m.completed).length || 0;
+    const totalMicroTasks = task.microTask?.length || 0;
     const progress = totalMicroTasks > 0 ? (completedMicroTasks / totalMicroTasks) * 100 : 0;
-    const progressBarColor = getProgressBarColor(task.status);
 
     return (
-        <div onClick={handleClick} className="cursor-pointer bg-[#ffffff] hover:bg-[#e9e9eac7] sm:max-h-[30%] w-full max-w-full sm:w-[30%] p-5 border-2 flex flex-row justify-between border-black rounded-2xl shadow-[2px_4px_0_0_rgba(0,0,0,1)]">
-            <div className="flex flex-col overflow-hidden">
-                <span className="font-bold text-xl truncate">{task.title}</span>
-                <span className="font-light mt-3 break-words overflow-hidden text-ellipsis line-clamp-2">{task.description}</span>
-                <div className="font-medium flex flex-row">
-                    <Image src="/done.png" 
-                    alt="tick" 
-                    width={20} 
-                    height={20}
-                    style={{ objectFit: "contain" }}/>
-                    <span className="ml-1">{totalMicroTasks} tasks </span>
+        <div
+            onClick={handleClick}
+            className="cursor-pointer bg-white border-2 border-black rounded-[20px] p-5 shadow-[2px_4px_0_0_rgba(0,0,0,1)] flex justify-between gap-3 hover:bg-[#fafafa] transition-colors"
+        >
+            <div className="overflow-hidden min-w-0">
+                <span
+                    className="inline-block text-[11px] font-bold px-2.5 py-1 rounded-full mb-2"
+                    style={{ color: meta.color, background: `${meta.color}22` }}
+                >
+                    {meta.label}
+                </span>
+                <p className="font-bold text-lg mb-1.5 whitespace-nowrap overflow-hidden text-ellipsis">
+                    {task.title}
+                </p>
+                <p className="text-sm text-[#666666] mb-3 overflow-hidden line-clamp-2">
+                    {task.description}
+                </p>
+                <div className="flex gap-3.5 text-xs text-[#999999]">
+                    <span>{totalMicroTasks} tasks</span>
+                    <span>Due {formatDate(task.dueDate)}</span>
                 </div>
             </div>
-            <CircularProgressBar percentage={progress} color={progressBarColor} sqSize={60} strokeWidth={5} />
+            <CircularProgressBar percentage={progress} color={meta.color} sqSize={56} strokeWidth={5} />
         </div>
     );
 }
